@@ -2,11 +2,12 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-import 'src/game/langaw.dart';
+import 'src/game/game.dart';
 import 'src/widgets/game_over.dart';
+import 'src/widgets/hud.dart';
 import 'src/widgets/main_menu.dart';
 
-Langaw _langaw = Langaw();
+final _game = Langaw();
 
 Future<void> main() async {
   // Ensures that all bindings are initialized
@@ -44,26 +45,29 @@ class MyGameApp extends StatelessWidget {
         ),
       ),
       home: Scaffold(
-        body: GameWidget(
+        body: GameWidget<Langaw>(
           // This will dislpay a loading bar until [DinoRun] completes
           // its onLoad method.
-          loadingBuilder: (conetxt) => Center(
-            child: Container(
+          loadingBuilder: (conetxt) => const Center(
+            child: SizedBox(
               width: 200,
-              child: const LinearProgressIndicator(),
+              child: LinearProgressIndicator(),
             ),
           ),
           // Register all the overlays that will be used by this game.
           overlayBuilderMap: {
             MainMenu.id: (_, Langaw gameRef) => MainMenu(gameRef),
             // PauseMenu.id: (_, DinoRun gameRef) => PauseMenu(gameRef),
-            // Hud.id: (_, DinoRun gameRef) => Hud(gameRef),
+            Hud.id: (_, Langaw gameRef) => Hud(gameRef),
             GameOverMenu.id: (_, Langaw gameRef) => GameOverMenu(gameRef),
             // SettingsMenu.id: (_, DinoRun gameRef) => SettingsMenu(gameRef),
           },
           // By default MainMenu overlay will be active.
-          initialActiveOverlays: const <String>[MainMenu.id],
-          game: _langaw,
+          initialActiveOverlays: const <String>[
+            MainMenu.id,
+            Hud.id,
+          ],
+          game: _game,
         ),
       ),
     );

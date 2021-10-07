@@ -2,21 +2,17 @@ import 'package:flutter/material.dart';
 
 import '/src/game/game.dart';
 
-class GameOverMenu extends StatelessWidget {
+class Hud extends StatelessWidget {
   // An unique identified for this overlay.
-  static const id = 'GameOverMenu';
+  static const id = 'HUD';
 
   // Reference to parent game.
   final Langaw gameRef;
 
-  const GameOverMenu(this.gameRef, {Key? key}) : super(key: key);
+  const Hud(this.gameRef, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    void _startGame() {
-      //  TODO
-    }
-
     void _toggleBGM() {
       //  TODO
     }
@@ -25,7 +21,7 @@ class GameOverMenu extends StatelessWidget {
       //  TODO
     }
 
-    const score = 5;
+    const score = 8;
     const shadow = Shadow(
       blurRadius: 4,
       color: Color(0xff000000),
@@ -75,22 +71,6 @@ class GameOverMenu extends StatelessWidget {
               ],
             ),
           ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Image.asset(
-              'assets/images/ui/lose-splash.png',
-              width: 292,
-            ),
-            IconButton(
-              icon: Image.asset('assets/images/ui/start-button.png'),
-              iconSize: 250,
-              padding: const EdgeInsets.all(0),
-              onPressed: _startGame,
-            )
-          ],
         ),
       ],
     );

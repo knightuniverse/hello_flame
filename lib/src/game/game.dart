@@ -1,10 +1,19 @@
-// ignore_for_file: file_names
+import 'dart:math';
 
+import 'package:boxer/src/widgets/main_menu.dart';
 import 'package:flame/game.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 
 import '/src/game/audio_manager.dart';
+import '/src/game/flies.dart';
+
+enum GameStatus {
+  gameover,
+  idle,
+  pause,
+  playing,
+}
 
 class Langaw extends FlameGame {
   static const _imageAssets = [
@@ -59,6 +68,12 @@ class Langaw extends FlameGame {
     'sfx/ouch11.ogg',
   ];
 
+  late Image _image;
+  final Random _random = Random();
+  final Timer _timer = Timer(2, repeat: true);
+
+  double get tileSize => 42;
+
   @override
   Future<void>? onLoad() async {
     await AudioManager.instance.init(_audioAssets);
@@ -69,6 +84,8 @@ class Langaw extends FlameGame {
     // Set a fixed viewport to avoid manually scaling
     // and handling different screen sizes.
     camera.viewport = FixedResolutionViewport(Vector2(375, 667));
+    camera.setRelativeOffset(Anchor.topLeft);
+    camera.speed = 1;
 
     var background = SpriteComponent.fromImage(
       images.fromCache('bg/backyard.png'),
@@ -78,6 +95,39 @@ class Langaw extends FlameGame {
 
     add(background);
 
+    _image = images.fromCache(
+      'flies/drooler-fly-1.png',
+    );
+    _timer.callback = () => _spawnRandomFly();
+
     return super.onLoad();
+  }
+
+  @override
+  void update(double dt) {
+    _timer.update(dt);
+    super.update(dt);
+  }
+
+  /// This method add the already created [Dino]
+  /// and [EnemyManager] to this game.
+  void startGamePlay() {
+    if (overlays.isActive(MainMenu.id)) {
+      overlays.remove(MainMenu.id);
+    }
+    _timer.start();
+  }
+
+  void _spawnRandomFly() {
+    add(
+      SpriteComponent.fromImage(
+        _image,
+        position: Vector2(
+          _random.nextDouble() * (375 - (42 * 1.35)),
+          (_random.nextDouble() * (667 - (42 * 2.85))) + (42 * 1.5),
+        ),
+        size: Vector2(42, 42),
+      ),
+    );
   }
 }
